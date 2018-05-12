@@ -4,6 +4,7 @@ FROM ntodd/ruby-xenial:2.4.0
 LABEL maintainer="Nate Todd <nate@pixelauthorityllc.com>"
 
 ENV GEM_VERSION 0.19.0
+ENV HANDBRAKE_VERSION 1.1.0
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
@@ -96,13 +97,14 @@ RUN set -ex \
   && cd /usr/src/ffmpeg \
   && rm -rf x265 \
 
-  # HandbrakeCli master
-  && git clone https://github.com/HandBrake/HandBrake.git \
-  && cd HandBrake \
+  # HandbrakeCli Release
+  && wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
+  && tar xvjf HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
+  && cd HandBrake-$HANDBRAKE_VERSION \
   && ./configure --launch-jobs=$(nproc) --disable-gtk --launch \
   && cd build && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf HandBrake \
+  && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
 
   # FFmpeg 3.3.5
   && wget -O ffmpeg.zip https://github.com/FFmpeg/FFmpeg/archive/n3.3.5.zip \
