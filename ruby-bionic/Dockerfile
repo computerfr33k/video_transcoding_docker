@@ -1,6 +1,12 @@
-# computerfr33k/ruby-bionic:stable
+# computerfr33k/ruby-bionic:latest
 
 FROM ubuntu:18.04
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
-RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    ruby-full \
+  && rm -rf /var/lib/apt/lists/*
+
+CMD ["irb"]
