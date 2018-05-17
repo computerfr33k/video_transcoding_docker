@@ -1,7 +1,5 @@
-# ntodd/video-transcoding:0.18.0
-
-FROM ntodd/ruby-xenial:2.4.0
-LABEL maintainer="Nate Todd <nate@pixelauthorityllc.com>"
+FROM computerfr33k/ruby-bionic:latest
+LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
 ENV GEM_VERSION 0.19.0
 ENV HANDBRAKE_VERSION 1.1.0
@@ -56,16 +54,16 @@ RUN set -ex \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
   && cd /usr/src/ffmpeg \
 
-  # NASM 2.13.01
-  && wget http://www.nasm.us/pub/nasm/releasebuilds/2.13.01/nasm-2.13.01.tar.bz2 \
-  && tar xjvf nasm-2.13.01.tar.bz2 \
-  && cd nasm-2.13.01 \
+  # NASM 2.13.03
+  && wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2 \
+  && tar xjvf nasm-2.13.03.tar.bz2 \
+  && cd nasm-2.13.03 \
   && ./autogen.sh \
   && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf nasm-2.13.01 \
+  && rm -rf nasm-2.13.03 \
 
   # libx264 stable
   && git clone -b stable http://git.videolan.org/git/x264.git x264 \
@@ -76,16 +74,16 @@ RUN set -ex \
   && cd /usr/src/ffmpeg \
   && rm -rf x264-snapshot* \
 
-  # libfdk-aac master
-  && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/tarball/master \
+  # libfdk-aac 0.1.6
+  && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz \
   && tar xzvf fdk-aac.tar.gz \
-  && cd mstorsjo-fdk-aac* \
+  && cd fdk-aac* \
   && autoreconf -fiv \
   && ./configure --prefix="/usr/src/ffmpeg/build" --disable-shared \
   && make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf mstorsjo-fdk-aac* \
+  && rm -rf fdk-aac* \
 
   # libx265 2.7
   && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_2.7.tar.gz \
@@ -106,9 +104,9 @@ RUN set -ex \
   && cd /usr/src/ffmpeg \
   && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
 
-  # FFmpeg 3.3.5
-  && wget -O ffmpeg.zip https://github.com/FFmpeg/FFmpeg/archive/n3.3.5.zip \
-  && unzip ffmpeg.zip \
+  # FFmpeg 4.0
+  && wget -O ffmpeg.tar.gz https://github.com/FFmpeg/FFmpeg/archive/n4.0.tar.gz \
+  && tar zxvf ffmpeg.tar.gz \
   && mv FFmpeg* ffmpeg_src \
   && cd ffmpeg_src \
   && PATH="/usr/src/ffmpeg/bin:$PATH" PKG_CONFIG_PATH="/usr/src/ffmpeg/build/lib/pkgconfig" ./configure \
