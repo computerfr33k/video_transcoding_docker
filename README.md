@@ -1,8 +1,8 @@
 # Video Transcoding for Docker
 
-Docker support for [https://github.com/donmelton/video_transcoding](https://github.com/donmelton/video_transcoding)
+Docker support for [https://github.com/donmelton/video_transcoding](https://github.com/donmelton/video_transcoding) with automatic mounting of a CIFS path
 
-The Docker image is [available on Docker Hub](https://hub.docker.com/r/ntodd/video-transcoding/).
+The Docker image is [available on Docker Hub](https://hub.docker.com/r/arikalish/video-transcoding-cifs/).
 
 ## Prerequisites
 
@@ -13,17 +13,13 @@ You must be running [Docker for Mac](https://docs.docker.com/engine/installation
 To run the video_transcoding gem in Docker, execute the following:
 
 ```
-# Docker for Mac & Linux
-docker run -itv "`pwd`":/data ntodd/video-transcoding
-
-# Docker for Windows
-docker run -itv C:\My\Current\Path:/data ntodd/video-transcoding
+docker run --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH -it -e REMOTE_PATH=$REMOTE_CIFS_PATH -e LOCAL_PATH=/$PATH_INSIDE_CONTAINER -e REMOTE_USER=$REMOTE_USERNAME -e REMOTE_PASSWORD=$REMOTE_PASSWORD 
 ```
 
 This will:
 
-1. Download the `ntodd/video-transcoding` Docker image (unless already downloaded)
-2. Mount the current working directory on your host machine as a shared volume inside the container
+1. Download the `arikalish/video-transcoding-cifs` Docker image (unless already downloaded)
+2. Mount $REMOTE_CIFS_PATH inside the container at $LOCAL_PATH, creating the directory if necessary. Stopping if it is not empty.
 3. Run an interactive bash shell with access to your current directory and the video_transcoding cli tools
 
 For best results on Docker for Mac or Windows, set your CPU count in preferences to the maximum available for your machine.
@@ -31,5 +27,5 @@ For best results on Docker for Mac or Windows, set your CPU count in preferences
 To update to the latest version:
 
 ```
-docker pull ntodd/video-transcoding:latest
+docker pull arikalish/video-transcoding-cifs:latest
 ```

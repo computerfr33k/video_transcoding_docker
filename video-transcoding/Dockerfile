@@ -1,5 +1,5 @@
-FROM computerfr33k/ruby-bionic:latest
-LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
+FROM arikalish/ruby-bionic:latest
+LABEL maintainer="Ari Kalish <arikalish@gmail.com>"
 
 ENV GEM_VERSION 0.19.0
 ENV HANDBRAKE_VERSION 1.1.0
@@ -39,6 +39,7 @@ RUN set -ex \
     cmake-curses-gui \
     mercurial \
     libmp3lame-dev \
+	libspeex-dev \
     libopus-dev \
     libvpx-dev \
     libx264-dev \
@@ -46,16 +47,17 @@ RUN set -ex \
     mkvtoolnix \
     mp4v2-utils \
     mpv \
+	cifs-utils \
   ' \
   && apt-get update \
   && apt-get install -y --no-install-recommends $buildDeps \
   && mkdir -p /usr/src/ffmpeg/bin \
   && mkdir -p /usr/src/ffmpeg/build \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
-  && cd /usr/src/ffmpeg \
+  && cd /usr/src/ffmpeg
 
   # NASM 2.13.03
-  && wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2 \
+  RUN wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2 \
   && tar xjvf nasm-2.13.03.tar.bz2 \
   && cd nasm-2.13.03 \
   && ./autogen.sh \
@@ -63,19 +65,19 @@ RUN set -ex \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf nasm-2.13.03 \
+  && rm -rf nasm-2.13.03
 
   # libx264 stable
-  && git clone -b stable http://git.videolan.org/git/x264.git x264 \
+  RUN git clone -b stable http://git.videolan.org/git/x264.git x264 \
   && cd x264 \
-  && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" --enable-static --disable-opencl \
+  && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" --enable-static --enable-pic --disable-opencl \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf x264-snapshot* \
+  && rm -rf x264-snapshot*
 
   # libfdk-aac 0.1.6
-  && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz \
+  RUN wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz \
   && tar xzvf fdk-aac.tar.gz \
   && cd fdk-aac* \
   && autoreconf -fiv \
@@ -83,29 +85,37 @@ RUN set -ex \
   && make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf fdk-aac* \
+  && rm -rf fdk-aac*
 
-  # libx265 2.7
-  && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_2.7.tar.gz \
+  # libx265 2.8
+  RUN wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_2.8.tar.gz \
   && tar xzvf x265.tar.gz \
-  && cd x265_2.7/build/linux \
+  && cd x265_2.8/build/linux \
   && PATH="/usr/src/ffmpeg/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr/src/ffmpeg/build" -DENABLE_SHARED:bool=off ../../source \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf x265 \
+  && rm -rf x265
 
   # HandbrakeCli Release
-  && wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
+  RUN wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && tar xvjf HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && cd HandBrake-$HANDBRAKE_VERSION \
-  && ./configure --launch-jobs=$(nproc) --disable-gtk --launch \
+  && ./configure --launch-jobs=$(nproc) --enable-fdk --disable-gtk --launch \
   && cd build && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
-
+  && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2
+  
+  # HandbrakeCli master
+  #RUN git clone https://github.com/HandBrake/HandBrake.git \
+  #&& cd HandBrake \
+  #&& ./configure --launch-jobs=$(nproc) --enable-fdk --disable-gtk --launch \
+  #&& cd build && make install \
+  #&& cd /usr/src/ffmpeg \
+  #&& rm -rf HandBrake
+  
   # FFmpeg 4.0
-  && wget -O ffmpeg.tar.gz https://github.com/FFmpeg/FFmpeg/archive/n4.0.tar.gz \
+  RUN wget -O ffmpeg.tar.gz https://github.com/FFmpeg/FFmpeg/archive/n4.0.tar.gz \
   && tar zxvf ffmpeg.tar.gz \
   && mv FFmpeg* ffmpeg_src \
   && cd ffmpeg_src \
@@ -139,9 +149,14 @@ RUN set -ex \
   # Install application dependencies
   && apt-get purge -y --auto-remove $buildDeps \
   && rm -rf /var/lib/apt/lists/* \
-  && gem install video_transcoding -v "$GEM_VERSION" \
-  && mkdir /data
+  && gem install video_transcoding -v "$GEM_VERSION"
 
-WORKDIR /data
+WORKDIR /
 
-CMD [ "/bin/bash" ]
+COPY mount.sh /mount.sh
+
+RUN chmod +x /mount.sh
+
+WORKDIR /
+
+ENTRYPOINT ["/mount.sh"]
