@@ -1,8 +1,10 @@
 # Video Transcoding for Docker
 
+This is a forked version of https://github.com/ntodd/video_transcoding_docker running the latest versions of HandBrake and video_transcoding.
+
 Docker support for [https://github.com/donmelton/video_transcoding](https://github.com/donmelton/video_transcoding)
 
-The Docker image is [available on Docker Hub](https://hub.docker.com/r/ntodd/video-transcoding/).
+The Docker image is [available on Docker Hub](https://hub.docker.com/r/computerfr33k/video-transcoding/).
 
 ## Prerequisites
 
@@ -14,15 +16,15 @@ To run the video_transcoding gem in Docker, execute the following:
 
 ```
 # Docker for Mac & Linux
-docker run -itv "`pwd`":/data ntodd/video-transcoding
+docker run -itv "`pwd`":/data computerfr33k/video-transcoding
 
 # Docker for Windows
-docker run -itv C:\My\Current\Path:/data ntodd/video-transcoding
+docker run -itv C:\My\Current\Path:/data computerfr33k/video-transcoding
 ```
 
 This will:
 
-1. Download the `ntodd/video-transcoding` Docker image (unless already downloaded)
+1. Download the `computerfr33k/video-transcoding` Docker image (unless already downloaded)
 2. Mount the current working directory on your host machine as a shared volume inside the container
 3. Run an interactive bash shell with access to your current directory and the video_transcoding cli tools
 
@@ -31,5 +33,5 @@ For best results on Docker for Mac or Windows, set your CPU count in preferences
 To update to the latest version:
 
 ```
-docker pull ntodd/video-transcoding:latest
+docker pull computerfr33k/video-transcoding:latest
 ```
