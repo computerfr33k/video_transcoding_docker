@@ -1,8 +1,12 @@
 FROM computerfr33k/ruby-bionic:latest
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
-ENV GEM_VERSION 0.19.0
-ENV HANDBRAKE_VERSION 1.1.0
+ENV GEM_VERSION 0.20.0
+ENV HANDBRAKE_VERSION 1.1.1
+ENV FFMPEG_VERSION 4.0.1
+ENV NASM_VERSION 2.13.03
+ENV LIBFDK_AAC_VERSION 0.1.6
+ENV LIBX265_VERSION 2.8
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
@@ -41,7 +45,6 @@ RUN set -ex \
     libmp3lame-dev \
     libopus-dev \
     libvpx-dev \
-    libx264-dev \
     unzip \
     mkvtoolnix \
     mp4v2-utils \
@@ -53,29 +56,26 @@ RUN set -ex \
   && mkdir -p /usr/src/ffmpeg/build \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
   && cd /usr/src/ffmpeg \
-
   # NASM 2.13.03
-  && wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2 \
-  && tar xjvf nasm-2.13.03.tar.bz2 \
-  && cd nasm-2.13.03 \
+  && wget https://www.nasm.us/pub/nasm/releasebuilds/$NASM_VERSION/nasm-$NASM_VERSION.tar.bz2 \
+  && tar xjvf nasm-$NASM_VERSION.tar.bz2 \
+  && cd nasm-$NASM_VERSION \
   && ./autogen.sh \
   && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
-  && rm -rf nasm-2.13.03 \
-
+  && rm -rf nasm-$NASM_VERSION \
   # libx264 stable
   && git clone -b stable http://git.videolan.org/git/x264.git x264 \
   && cd x264 \
-  && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" --enable-static --disable-opencl \
+  && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" --enable-static --enable-pic --disable-opencl \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf x264-snapshot* \
-
   # libfdk-aac 0.1.6
-  && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz \
+  && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v$LIBFDK_AAC_VERSION.tar.gz \
   && tar xzvf fdk-aac.tar.gz \
   && cd fdk-aac* \
   && autoreconf -fiv \
@@ -84,17 +84,15 @@ RUN set -ex \
   && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf fdk-aac* \
-
   # libx265 2.7
-  && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_2.7.tar.gz \
+  && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_$LIBX265_VERSION.tar.gz \
   && tar xzvf x265.tar.gz \
-  && cd x265_2.7/build/linux \
+  && cd x265_$LIBX265_VERSION/build/linux \
   && PATH="/usr/src/ffmpeg/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr/src/ffmpeg/build" -DENABLE_SHARED:bool=off ../../source \
   && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
   && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf x265 \
-
   # HandbrakeCli Release
   && wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && tar xvjf HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
@@ -103,9 +101,8 @@ RUN set -ex \
   && cd build && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
-
-  # FFmpeg 4.0
-  && wget -O ffmpeg.tar.gz https://github.com/FFmpeg/FFmpeg/archive/n4.0.tar.gz \
+  # FFmpeg
+  && wget -O ffmpeg.tar.gz https://github.com/FFmpeg/FFmpeg/archive/n$FFMPEG_VERSION.tar.gz \
   && tar zxvf ffmpeg.tar.gz \
   && mv FFmpeg* ffmpeg_src \
   && cd ffmpeg_src \
