@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    environment:
+      DOCKER_USER: "computerfr33k"
+    machine: true
+    steps:
+      - checkout
+      - run: |
+         docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+      # build the images
+      - run: cd ruby-bionic; docker build -t computerfr33k/ruby-bionic .
+      - run: cd ../vido-transcoding; docker build -t computerfr33k/video-transcoding .
+
+      # deploy the images
+      - run: docker push computerfr33k/ruby-bionic
+      - run: docker push computerfr33k/video-transcoding
