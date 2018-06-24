@@ -1,0 +1,20 @@
+sudo: required
+services:
+- docker
+jobs:
+  include:
+  - stage: build ruby-bionic base docker image
+    script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - cd ruby-bionic; docker build -t $DOCKER_USERNAME/ruby-bionic .
+    - docker images
+    - docker push $DOCKER_USERNAME/ruby-bionic
+  - stage: build video-transcoding docker image
+    script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - cd video-transcoding; docker build -t $DOCKER_USERNAME/video-transcoding .
+    - docker images
+    - docker push $DOCKER_USERNAME/video-transcoding
+env:
+  global:
+    secure: E7HRDGx+NveUKAiXN0NXI19eVmsQBXrIkm2H7vyNFpWSjX933XBXnDNYyjKcF6WW2SD2FCw18Cr/hoBd9Ja59W65d30xPvKbXLkMVowCM0KJuC1cMq2G6FeeFosGHqSNWC2qpWSrhuds3LNwRzC9lRDA0fl2h/xxwhSe7GvyO3FpX5doz65OD8aGcrRrUTODH3zDuqzNHH74WpC/dslfUMP96C2m1e5Y8IJgmucLfn3gSmXGwqK/BtlBknS/QgDksowRvf5v8bkl045F5ANiTaEo3fxjE0BFHI32cafh+av25OJOzBrUMWCh5ZZ7DBShGXJ/JSKKCrrVRywVmspmBVkrbpv5ywDGXqr2XAG9a63XuXxiPiMb8wNXS4ePq/TJwZcdxSZsgRjDJglPManJje5atvVh7g6JL78uadb7U63th6Q0kN0CrC8kWdlTUWkvg/OIHqRsYVKADPiyVfQpPdVjJux0AcgkdrSWQdMVVIcdOx9QBPHEK2r9AL5ZhtmByoUJ+XBa4TdTBGG/Pt6RFLdwQCYFw0IaJwvCZ5j3WQN6lLm83QEUprGW8khgURq3Dm4b+pfYAGYC9MsctAL8dd0mWHjpnx5DV9uvX13C/3xwGc1CShsLIhylz7t5aUhMYxzdy4x7WNfsDuYAS1U6bveOwrTIe5B7V6zP7hvEqSA=
