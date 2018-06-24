@@ -45,6 +45,7 @@ RUN set -ex \
     libmp3lame-dev \
     libopus-dev \
     libvpx-dev \
+    libx264-dev \
     unzip \
     mkvtoolnix \
     mp4v2-utils \
@@ -56,7 +57,7 @@ RUN set -ex \
   && mkdir -p /usr/src/ffmpeg/build \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
   && cd /usr/src/ffmpeg \
-  # NASM 2.13.03
+  # NASM
   && wget https://www.nasm.us/pub/nasm/releasebuilds/$NASM_VERSION/nasm-$NASM_VERSION.tar.bz2 \
   && tar xjvf nasm-$NASM_VERSION.tar.bz2 \
   && cd nasm-$NASM_VERSION \
@@ -66,15 +67,7 @@ RUN set -ex \
   && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf nasm-$NASM_VERSION \
-  # libx264 stable
-  && git clone -b stable http://git.videolan.org/git/x264.git x264 \
-  && cd x264 \
-  && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" --enable-static --enable-pic --disable-opencl \
-  && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
-  && make install \
-  && cd /usr/src/ffmpeg \
-  && rm -rf x264-snapshot* \
-  # libfdk-aac 0.1.6
+  # libfdk-aac
   && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v$LIBFDK_AAC_VERSION.tar.gz \
   && tar xzvf fdk-aac.tar.gz \
   && cd fdk-aac* \
@@ -84,7 +77,7 @@ RUN set -ex \
   && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf fdk-aac* \
-  # libx265 2.7
+  # libx265
   && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_$LIBX265_VERSION.tar.gz \
   && tar xzvf x265.tar.gz \
   && cd x265_$LIBX265_VERSION/build/linux \
@@ -97,7 +90,7 @@ RUN set -ex \
   && wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && tar xvjf HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && cd HandBrake-$HANDBRAKE_VERSION \
-  && ./configure --launch-jobs=$(nproc) --disable-gtk --launch \
+  && ./configure --launch-jobs=$(nproc) --enable-fdk --disable-gtk --launch \
   && cd build && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
