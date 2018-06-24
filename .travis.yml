@@ -1,15 +1,16 @@
 sudo: required
 services:
 - docker
+stages:
+  - build
 jobs:
   include:
-  - stage: build ruby-bionic base docker image
+  - stage: build
     script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - cd ruby-bionic; docker build -t $DOCKER_USERNAME/ruby-bionic .
     - docker images
     - docker push $DOCKER_USERNAME/ruby-bionic
-  - stage: build video-transcoding docker image
     script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - cd video-transcoding; docker build -t $DOCKER_USERNAME/video-transcoding .
