@@ -2,20 +2,19 @@ sudo: required
 services:
 - docker
 stages:
-  - build
+- build
 jobs:
   include:
   - stage: build
     script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - cd ruby-bionic; docker build -t $DOCKER_USERNAME/ruby-bionic .
+    - cd ../video-transcoding; docker build -t $DOCKER_USERNAME/video-transcoding
+      .
     - docker images
     - docker push $DOCKER_USERNAME/ruby-bionic
-    script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - cd video-transcoding; docker build -t $DOCKER_USERNAME/video-transcoding .
-    - docker images
     - docker push $DOCKER_USERNAME/video-transcoding
 env:
   global:
-    secure: E7HRDGx+NveUKAiXN0NXI19eVmsQBXrIkm2H7vyNFpWSjX933XBXnDNYyjKcF6WW2SD2FCw18Cr/hoBd9Ja59W65d30xPvKbXLkMVowCM0KJuC1cMq2G6FeeFosGHqSNWC2qpWSrhuds3LNwRzC9lRDA0fl2h/xxwhSe7GvyO3FpX5doz65OD8aGcrRrUTODH3zDuqzNHH74WpC/dslfUMP96C2m1e5Y8IJgmucLfn3gSmXGwqK/BtlBknS/QgDksowRvf5v8bkl045F5ANiTaEo3fxjE0BFHI32cafh+av25OJOzBrUMWCh5ZZ7DBShGXJ/JSKKCrrVRywVmspmBVkrbpv5ywDGXqr2XAG9a63XuXxiPiMb8wNXS4ePq/TJwZcdxSZsgRjDJglPManJje5atvVh7g6JL78uadb7U63th6Q0kN0CrC8kWdlTUWkvg/OIHqRsYVKADPiyVfQpPdVjJux0AcgkdrSWQdMVVIcdOx9QBPHEK2r9AL5ZhtmByoUJ+XBa4TdTBGG/Pt6RFLdwQCYFw0IaJwvCZ5j3WQN6lLm83QEUprGW8khgURq3Dm4b+pfYAGYC9MsctAL8dd0mWHjpnx5DV9uvX13C/3xwGc1CShsLIhylz7t5aUhMYxzdy4x7WNfsDuYAS1U6bveOwrTIe5B7V6zP7hvEqSA=
+  - secure: kgaIKyX5hxWj0c61/vBBWJMTnPr802rc5K7+oQZ491FhDuiXtUcWZ+oZ7Vux11/k5OAt6z/TKhgeU0pI3TvZdeJosdSqyy4n1aV+uvDy22c2yhW00+u3zXWDxJV5sFVBJI0IfjeKP2V4y0Heyl/5Oi6pccQxx2An2XbXm1A9Grjt0HH2HaoJPgYv7K7DFSRl0cH/SkVfMe2plo+XMlpoaOmzF4Bef41zsZEMWV3gZjrH/AhtQstPtS/gqESX3A7mq6GfNWCnhmjQK4Sb70i8oEqzISjv9JJaxN3Uc0OlA3uxf8zXlhKZBnnm77YW4lsv2B9JC1y4uj7M0Ey/xCkgOftUKYvuimPj7u8w78c6UnZ1B6/YuEjXmDZi84qI4X0rx4l+xFa1sjvMXQypNhLxPS2wh3tTIL9cugquByGhL/Ga/dlmNueXMyMBaJLOvXPFt5MZMtl0AMvDxsQKZpKsnk9asmUGg/NM1UyzpIcbKZ7QbLdYi5KlaIasP03jq/6zddLtdx33RiBAM0QxFzCnf2X+a0whkYbyaFxGwilv/HO28AFb1J4ZQE2L3twd/UDbi98N5hD3+f4QL0FYFDUdKTyZiGPcmovDSxQ64TPzoGfyq/A0vrDNA+PWgRgfobQuv/xmxCo7a/gkoIe4amSX8EfracrLKzo40BPpUachV18=
+  - secure: Ykc/4wwl1UR2XAgVEik+BEOsaYVEsUmNftCPrnx8kiLrr5tp3mBbTi7n5MTpiT3SkXejA8DtiE8vIAip/fFWIPZRMK7t1Eqg31npblFQbTePKQRwsM2DsU7GBVVMcfK8WUSZGYn4exTAUTPZ/wYTfrL7TZcS+dQEoBCYjqkyA/GN4iuzoGQbirJlu8JEWNZ4JlCaBd4k5Mx98izsteaNHJBho4p311QUgMIWqNe3JfOoR1Mb+gYaqe315TDhH12IuMvsajpDICA+QI7C/zWGyD52ErXrXKliPI114EdbTzsFfZVfRGR00mxH9oS96ttP13p+QQ0CPf6N7p7vR1S7ITafswKd/kkTq1oRCR40gDwa6MCz+o2mYFDhs0mPSB+IvUw74qStXzSzqJ1lKcB1CRaowh4bCZjrnSra3+lBI/nwPh3+WLL8vcdRnOmYKPX1E1G5g+6ajjOatrZ9B65ph3mILZW6VXFi1TMly3dmeXD9hbsbpEBJc4fTVz/EUGasBVxd76yOBJNdFjLCgK3EngVF3aCumDXhWP8ZLCA9bfy+3+7+Oaz2xiXwHkWpFMBTfCD7gU8HJxKkIhadD0WhriFHP/2y42MjkDMatSu4+VcxVxG4JqelPD3zkFzaxamtFqgcn+iiyrKLiEA2PeaiPJnwLO9iCSWALXt7i4Uj64s=
