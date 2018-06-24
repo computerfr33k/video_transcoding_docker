@@ -1,19 +1,18 @@
 sudo: required
 services:
 - docker
-stages:
-- build
-jobs:
-  include:
-  - stage: build
-    script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - cd ruby-bionic; docker build -t $DOCKER_USERNAME/ruby-bionic .
-    - cd ../video-transcoding; docker build -t $DOCKER_USERNAME/video-transcoding
-      .
-    - docker images
-    - docker push $DOCKER_USERNAME/ruby-bionic
-    - docker push $DOCKER_USERNAME/video-transcoding
+script:
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+- cd ruby-bionic; docker build -t $DOCKER_USERNAME/ruby-bionic .
+- cd ../video-transcoding; docker build -t $DOCKER_USERNAME/video-transcoding .
+- docker images
+deploy:
+  provider: script
+  script:
+  - docker push $DOCKER_USERNAME/ruby-bionic
+  - docker push $DOCKER_USERNAME/video-transcoding
+  on:
+    branch: master
 env:
   global:
   - secure: kgaIKyX5hxWj0c61/vBBWJMTnPr802rc5K7+oQZ491FhDuiXtUcWZ+oZ7Vux11/k5OAt6z/TKhgeU0pI3TvZdeJosdSqyy4n1aV+uvDy22c2yhW00+u3zXWDxJV5sFVBJI0IfjeKP2V4y0Heyl/5Oi6pccQxx2An2XbXm1A9Grjt0HH2HaoJPgYv7K7DFSRl0cH/SkVfMe2plo+XMlpoaOmzF4Bef41zsZEMWV3gZjrH/AhtQstPtS/gqESX3A7mq6GfNWCnhmjQK4Sb70i8oEqzISjv9JJaxN3Uc0OlA3uxf8zXlhKZBnnm77YW4lsv2B9JC1y4uj7M0Ey/xCkgOftUKYvuimPj7u8w78c6UnZ1B6/YuEjXmDZi84qI4X0rx4l+xFa1sjvMXQypNhLxPS2wh3tTIL9cugquByGhL/Ga/dlmNueXMyMBaJLOvXPFt5MZMtl0AMvDxsQKZpKsnk9asmUGg/NM1UyzpIcbKZ7QbLdYi5KlaIasP03jq/6zddLtdx33RiBAM0QxFzCnf2X+a0whkYbyaFxGwilv/HO28AFb1J4ZQE2L3twd/UDbi98N5hD3+f4QL0FYFDUdKTyZiGPcmovDSxQ64TPzoGfyq/A0vrDNA+PWgRgfobQuv/xmxCo7a/gkoIe4amSX8EfracrLKzo40BPpUachV18=
