@@ -11,7 +11,7 @@ jobs:
 
       # build the images
       - run: cd ruby-bionic; docker build -t computerfr33k/ruby-bionic .
-      - run: cd vido-transcoding; docker build -t computerfr33k/video-transcoding .
+      - run: cd video-transcoding; docker build -t computerfr33k/video-transcoding .
 
       # deploy the images
       - run: docker push computerfr33k/ruby-bionic
