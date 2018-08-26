@@ -1,4 +1,4 @@
-FROM computerfr33k/ubuntu:18.04
+FROM ubuntu:18.04
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
 # https://github.com/donmelton/video_transcoding/releases
