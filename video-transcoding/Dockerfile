@@ -1,16 +1,29 @@
-FROM computerfr33k/ruby-bionic:latest
+FROM computerfr33k/ubuntu:18.04
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
+# https://github.com/donmelton/video_transcoding/releases
 ENV GEM_VERSION 0.20.0
+
+# https://handbrake.fr/
 ENV HANDBRAKE_VERSION 1.1.1
-ENV FFMPEG_VERSION 4.0.1
+
+# https://ffmpeg.org/download.html#releases
+ENV FFMPEG_VERSION 4.0.2
+
+# https://www.nasm.us/
 ENV NASM_VERSION 2.13.03
+
+# https://github.com/mstorsjo/fdk-aac/releases
 ENV LIBFDK_AAC_VERSION 0.1.6
+
+# https://bitbucket.org/multicoreware/x265/wiki/Home
 ENV LIBX265_VERSION 2.8
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
   && buildDeps=' \
+    curl \
+    ruby-full \
     autoconf \
     automake \
     build-essential \
