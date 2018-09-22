@@ -5,7 +5,7 @@ LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 ENV GEM_VERSION 0.20.0
 
 # https://handbrake.fr/
-ENV HANDBRAKE_VERSION 1.1.1
+ENV HANDBRAKE_VERSION 1.1.2
 
 # https://ffmpeg.org/download.html#releases
 ENV FFMPEG_VERSION 4.0.2
