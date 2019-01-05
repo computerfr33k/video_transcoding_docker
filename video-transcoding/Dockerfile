@@ -5,7 +5,7 @@ LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 ENV GEM_VERSION 0.22.0
 
 # https://handbrake.fr/
-ENV HANDBRAKE_VERSION 1.1.2
+ENV HANDBRAKE_VERSION 1.2.0
 
 # https://ffmpeg.org/download.html#releases
 ENV FFMPEG_VERSION 4.1
@@ -22,11 +22,12 @@ ENV LIBX265_VERSION 2.9
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
   && buildDeps=' \
-    curl \
-    ruby-full \
     autoconf \
     automake \
     build-essential \
+    cmake \
+    cmake-curses-gui \
+    curl \
     git \
     libass-dev \
     libbz2-dev \
@@ -35,34 +36,35 @@ RUN set -ex \
     libfribidi-dev \
     libharfbuzz-dev \
     libjansson-dev \
+    liblzma-dev \
+    libmp3lame-dev \
     libogg-dev \
+    libopus-dev \
     libsamplerate-dev \
+    libspeex-dev \
     libtheora-dev \
     libtool \
+    libtool-bin \
     libvorbis-dev \
+    libvpx-dev \
+    libx264-dev \
     libxml2-dev \
     m4 \
     make \
-    patch \
-    pkg-config \
-    python \
-    tar \
-    libtool-bin \
-    texinfo \
-    wget \
-    zlib1g-dev \
-    yasm \
-    cmake \
-    cmake-curses-gui \
     mercurial \
-    libmp3lame-dev \
-    libopus-dev \
-    libvpx-dev \
-    libx264-dev \
-    unzip \
     mkvtoolnix \
     mp4v2-utils \
     mpv \
+    patch \
+    pkg-config \
+    python \
+    ruby-full \
+    tar \
+    texinfo \
+    unzip \
+    wget \
+    yasm \
+    zlib1g-dev \
   ' \
   && apt-get update \
   && apt-get install -y --no-install-recommends $buildDeps \
@@ -103,7 +105,7 @@ RUN set -ex \
   && wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && tar xvjf HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && cd HandBrake-$HANDBRAKE_VERSION \
-  && ./configure --launch-jobs=$(nproc) --enable-fdk --disable-gtk --launch \
+  && ./configure --launch-jobs=$(nproc) --disable-gtk --launch \
   && cd build && make install \
   && cd /usr/src/ffmpeg \
   && rm -rf HandBrake-$HANDBRAKE_VERSION HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
