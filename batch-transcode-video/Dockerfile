@@ -1,7 +1,7 @@
 FROM computerfr33k/video-transcoding:latest
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
-ENV NODE_VERSION=8.x
+ENV NODE_VERSION=10.x
 ENV BATCH_TRANSCODE_VIDEO_VERSION=1.2.0
 
 # install build dependencies to compile ffmpeg from master

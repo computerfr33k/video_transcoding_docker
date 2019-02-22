@@ -2,22 +2,22 @@ FROM ubuntu:18.04
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION 0.22.0
+ENV GEM_VERSION 0.23.0
 
 # https://handbrake.fr/
-ENV HANDBRAKE_VERSION 1.2.0
+ENV HANDBRAKE_VERSION 1.2.1
 
 # https://ffmpeg.org/download.html#releases
-ENV FFMPEG_VERSION 4.1
+ENV FFMPEG_VERSION 4.1.1
 
 # https://www.nasm.us/
-ENV NASM_VERSION 2.14
+ENV NASM_VERSION 2.14.02
 
 # https://github.com/mstorsjo/fdk-aac/releases
 ENV LIBFDK_AAC_VERSION 0.1.6
 
 # https://bitbucket.org/multicoreware/x265/wiki/Home
-ENV LIBX265_VERSION 2.9
+ENV LIBX265_VERSION 3.0
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
