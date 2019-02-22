@@ -17,7 +17,7 @@ ENV NASM_VERSION 2.14.02
 ENV LIBFDK_AAC_VERSION 0.1.6
 
 # https://bitbucket.org/multicoreware/x265/wiki/Home
-ENV LIBX265_VERSION 3.0
+ENV LIBX265_VERSION 2.9
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
