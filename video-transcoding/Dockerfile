@@ -2,10 +2,10 @@ FROM ubuntu:18.04
 LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION 0.23.0
+ENV GEM_VERSION 0.24.0
 
 # https://handbrake.fr/
-ENV HANDBRAKE_VERSION 1.2.1
+ENV HANDBRAKE_VERSION 1.2.2
 
 # https://ffmpeg.org/download.html#releases
 ENV FFMPEG_VERSION 4.1.1
