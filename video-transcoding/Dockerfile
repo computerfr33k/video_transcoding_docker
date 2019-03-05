@@ -1,23 +1,25 @@
 FROM ubuntu:18.04
-LABEL maintainer="Eric Pfeiffer <computerfreak@computerfr33k.com>"
 
+# set version label
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/computerfr33k/video_transcoding_docker" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.schema-version="1.0"
+LABEL maintainer="computerfr33k"
+
+# global environment settings
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION 0.24.0
-
-# https://handbrake.fr/
-ENV HANDBRAKE_VERSION 1.2.2
-
-# https://ffmpeg.org/download.html#releases
-ENV FFMPEG_VERSION 4.1.1
-
-# https://www.nasm.us/
-ENV NASM_VERSION 2.14.02
-
-# https://github.com/mstorsjo/fdk-aac/releases
-ENV LIBFDK_AAC_VERSION 0.1.6
-
-# https://bitbucket.org/multicoreware/x265/wiki/Home
-ENV LIBX265_VERSION 2.9
+ENV GEM_VERSION=0.24.0 \
+HANDBRAKE_VERSION=1.2.2 \
+FFMPEG_VERSION=4.1.1 \
+NASM_VERSION=2.14.02 \
+LIBFDK_AAC_VERSION=0.1.6 \
+LIBX265_VERSION=2.9
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
@@ -138,7 +140,12 @@ RUN set -ex \
   && hash -r \
   && cd / \
   && mv /usr/src/ffmpeg/bin/ff* /usr/local/bin \
-  && rm -rf /usr/src/ffmpeg
+  && rm -rf /usr/src/ffmpeg \
+  && apt-get clean \
+  && rm -rf \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
 
 RUN set -ex \
   # Install application dependencies
