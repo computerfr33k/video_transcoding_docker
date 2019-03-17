@@ -15,11 +15,12 @@ LABEL maintainer="computerfr33k"
 # global environment settings
 # https://github.com/donmelton/video_transcoding/releases
 ENV GEM_VERSION=0.25.0 \
+# https://handbrake.fr/downloads.php
 HANDBRAKE_VERSION=1.2.2 \
+# https://ffmpeg.org/download.html#releases
 FFMPEG_VERSION=4.1.1 \
-NASM_VERSION=2.14.02 \
-LIBFDK_AAC_VERSION=0.1.6 \
-LIBX265_VERSION=2.9
+# https://bitbucket.org/multicoreware/x265/wiki/Home
+LIBX265_VERSION=3.0
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
@@ -57,6 +58,7 @@ RUN set -ex \
     mkvtoolnix \
     mp4v2-utils \
     mpv \
+    nasm \
     patch \
     pkg-config \
     python \
@@ -74,26 +76,6 @@ RUN set -ex \
   && mkdir -p /usr/src/ffmpeg/build \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
   && cd /usr/src/ffmpeg \
-  # NASM
-  && wget https://www.nasm.us/pub/nasm/releasebuilds/$NASM_VERSION/nasm-$NASM_VERSION.tar.bz2 \
-  && tar xjvf nasm-$NASM_VERSION.tar.bz2 \
-  && cd nasm-$NASM_VERSION \
-  && ./autogen.sh \
-  && PATH="/usr/src/ffmpeg/bin:$PATH" ./configure --prefix="/usr/src/ffmpeg/build" --bindir="/usr/src/ffmpeg/bin" \
-  && PATH="/usr/src/ffmpeg/bin:$PATH" make -j"$(nproc)" \
-  && make install \
-  && cd /usr/src/ffmpeg \
-  && rm -rf nasm-$NASM_VERSION \
-  # libfdk-aac
-  && wget -O fdk-aac.tar.gz https://github.com/mstorsjo/fdk-aac/archive/v$LIBFDK_AAC_VERSION.tar.gz \
-  && tar xzvf fdk-aac.tar.gz \
-  && cd fdk-aac* \
-  && autoreconf -fiv \
-  && ./configure --prefix="/usr/src/ffmpeg/build" --disable-shared \
-  && make -j"$(nproc)" \
-  && make install \
-  && cd /usr/src/ffmpeg \
-  && rm -rf fdk-aac* \
   # libx265
   && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_$LIBX265_VERSION.tar.gz \
   && tar xzvf x265.tar.gz \
@@ -125,7 +107,6 @@ RUN set -ex \
     --extra-libs=-lpthread \
     --enable-gpl \
     --enable-libass \
-    --enable-libfdk-aac \
     --enable-libfreetype \
     --enable-libmp3lame \
     --enable-libopus \
