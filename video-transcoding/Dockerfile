@@ -14,7 +14,7 @@ LABEL maintainer="computerfr33k"
 
 # global environment settings
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION=0.24.0 \
+ENV GEM_VERSION=0.25.0 \
 HANDBRAKE_VERSION=1.2.2 \
 FFMPEG_VERSION=4.1.1 \
 NASM_VERSION=2.14.02 \
