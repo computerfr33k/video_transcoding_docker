@@ -14,11 +14,11 @@ LABEL maintainer="computerfr33k"
 
 # global environment settings
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION=0.25.0 \
+ENV GEM_VERSION=0.25.1 \
 # https://handbrake.fr/downloads.php
 HANDBRAKE_VERSION=1.2.2 \
 # https://ffmpeg.org/download.html#releases
-FFMPEG_VERSION=4.1.1 \
+FFMPEG_VERSION=4.1.3 \
 # https://bitbucket.org/multicoreware/x265/wiki/Home
 LIBX265_VERSION=3.0
 
