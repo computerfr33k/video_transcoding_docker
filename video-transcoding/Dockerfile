@@ -86,7 +86,7 @@ RUN set -ex \
   && cd /usr/src/ffmpeg \
   && rm -rf x265 \
   # HandbrakeCli Release
-  && wget https://download2.handbrake.fr/$HANDBRAKE_VERSION/HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
+  && wget https://github.com/HandBrake/HandBrake/releases/download/${HANDBRAKE_VERSION}/HandBrake-${HANDBRAKE_VERSION}-source.tar.bz2 \
   && tar xvjf HandBrake-$HANDBRAKE_VERSION-source.tar.bz2 \
   && cd HandBrake-$HANDBRAKE_VERSION \
   && ./configure --launch-jobs=$(nproc) --disable-gtk --launch \
