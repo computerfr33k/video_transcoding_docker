@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # set version label
 # Build-time metadata as defined at http://label-schema.org
@@ -14,7 +14,8 @@ LABEL maintainer="computerfr33k"
 
 # global environment settings
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION=0.25.3 \
+ENV DEBIAN_FRONTEND=noninteractive \
+GEM_VERSION=0.25.3 \
 # https://handbrake.fr/downloads.php
 HANDBRAKE_VERSION=1.3.3 \
 # https://ffmpeg.org/download.html#releases
@@ -27,6 +28,7 @@ RUN set -ex \
   && buildDeps=' \
     autoconf \
     automake \
+    autopoint \
     build-essential \
     cmake \
     cmake-curses-gui \
@@ -41,6 +43,7 @@ RUN set -ex \
     libjansson-dev \
     liblzma-dev \
     libmp3lame-dev \
+    libnuma-dev \
     libogg-dev \
     libopus-dev \
     libsamplerate-dev \
@@ -55,10 +58,11 @@ RUN set -ex \
     m4 \
     make \
     mercurial \
+    meson \
     mkvtoolnix \
-    mp4v2-utils \
     mpv \
     nasm \
+    ninja-build \
     patch \
     pkg-config \
     python \
@@ -76,6 +80,11 @@ RUN set -ex \
   && mkdir -p /usr/src/ffmpeg/build \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
   && cd /usr/src/ffmpeg \
+  # mp4v2-utils
+  && git clone https://github.com/mp4v2/mp4v2.git \
+  && cd mp4v2 \
+  && autoreconf -i && ./configure \
+  && make CXXFLAGS='-fpermissive' && make install \
   # libx265
   && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265_git/downloads/x265_$LIBX265_VERSION.tar.gz \
   && tar xzvf x265.tar.gz \
