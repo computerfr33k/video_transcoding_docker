@@ -19,7 +19,7 @@ ENV GEM_VERSION=0.25.2 \
 HANDBRAKE_VERSION=1.2.2 \
 # https://ffmpeg.org/download.html#releases
 FFMPEG_VERSION=4.1.3 \
-# https://bitbucket.org/multicoreware/x265/wiki/Home
+# https://bitbucket.org/multicoreware/x265_git
 LIBX265_VERSION=3.0
 
 # install build dependencies to compile ffmpeg from master
@@ -77,7 +77,7 @@ RUN set -ex \
   && PATH="/usr/src/ffmpeg/bin:$PATH" \
   && cd /usr/src/ffmpeg \
   # libx265
-  && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265/downloads/x265_$LIBX265_VERSION.tar.gz \
+  && wget -O x265.tar.gz https://bitbucket.org/multicoreware/x265_git/downloads/x265_$LIBX265_VERSION.tar.gz \
   && tar xzvf x265.tar.gz \
   && cd x265_$LIBX265_VERSION/build/linux \
   && PATH="/usr/src/ffmpeg/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr/src/ffmpeg/build" -DENABLE_SHARED:bool=off ../../source \
