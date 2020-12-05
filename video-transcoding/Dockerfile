@@ -14,13 +14,13 @@ LABEL maintainer="computerfr33k"
 
 # global environment settings
 # https://github.com/donmelton/video_transcoding/releases
-ENV GEM_VERSION=0.25.2 \
+ENV GEM_VERSION=0.25.3 \
 # https://handbrake.fr/downloads.php
-HANDBRAKE_VERSION=1.2.2 \
+HANDBRAKE_VERSION=1.3.3 \
 # https://ffmpeg.org/download.html#releases
-FFMPEG_VERSION=4.1.3 \
+FFMPEG_VERSION=4.3.1 \
 # https://bitbucket.org/multicoreware/x265_git
-LIBX265_VERSION=3.0
+LIBX265_VERSION=3.3
 
 # install build dependencies to compile ffmpeg from master
 RUN set -ex \
